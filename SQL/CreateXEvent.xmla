@@ -1,0 +1,23 @@
+<Create xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ObjectDefinition>
+    <Trace>
+	  <AutoRestart>true</AutoRestart>
+      <ID>Stat</ID>
+      <Name>Stat</Name>
+      <XEvent xmlns="http://schemas.microsoft.com/analysisservices/2011/engine/300/300">
+        <event_session name="Stat" dispatchLatency="5" maxEventSize="0" maxMemory="4" memoryPartition="none" eventRetentionMode="AllowSingleEventLoss" trackCausality="true" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+          <event package="AS" name="QueryEnd" />
+          <event package="AS" name="VertiPaqSEQueryEnd" />
+          <!--<event package="AS" name="VertiPaqSEQueryCacheMatch" />-->
+          <target package="package0" name="event_file">
+            <parameter name="filename" value="C:\Program Files\Microsoft SQL Server\MSAS14.SQL2017\OLAP\Log\Stat.xel" />
+            <parameter name="max_file_size" value="4096" />
+            <parameter name="max_rollover_files" value="10" />
+            <parameter name="increment" value="1024" />
+          </target>
+        </event_session>
+      </XEvent>
+    </Trace>
+  </ObjectDefinition>
+</Create>
+
