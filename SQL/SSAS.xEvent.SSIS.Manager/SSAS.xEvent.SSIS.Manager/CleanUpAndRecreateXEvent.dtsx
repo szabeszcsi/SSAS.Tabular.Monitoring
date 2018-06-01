@@ -1,0 +1,505 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="6/1/2018 7:01:37 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="TSZDELL2015"
+  DTS:CreatorName="TSZDELL2015\szabeszcsi"
+  DTS:DTSID="{259AD100-BE99-4950-953A-B5E54BF64233}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="14.0.3002.92"
+  DTS:LocaleID="1038"
+  DTS:ObjectName="CleanUpAndRecreateXEvent"
+  DTS:PackageType="5"
+  DTS:VersionBuild="32"
+  DTS:VersionGUID="{724658AF-C81E-450D-B3AF-E6DB492F2F14}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SQL_CM]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{E67C3E77-AF36-454F-84A6-C6165589F006}"
+      DTS:ObjectName="SQL_CM">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::SQL_ConnectionString]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=TSZDELL2015\SQL2017;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SQL_SSAS_STAT]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{E7DA000B-7A02-432A-9824-59BF5705C545}"
+      DTS:ObjectName="SQL_SSAS_STAT">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::SQL_SSAS_STAT_ConnectionString]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=TSZDELL2015\SQL2017;Initial Catalog=SSAS_Stat;Provider=SQLNCLI11.1;Integrated Security=SSPI;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[SSAS_CM]"
+      DTS:CreationName="MSOLAP100"
+      DTS:DTSID="{D3D746D2-E999-47F5-A85A-5F93D0A827DF}"
+      DTS:ObjectName="SSAS_CM">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::SSAS_ConnectionString]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=TSZDELL2015\SQL2017;Provider=MSOLAP.8;Integrated Security=SSPI;Impersonation Level=Impersonate;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[xSession_Create_xmla_script]"
+      DTS:CreationName="FILE"
+      DTS:DTSID="{64DF3D93-BE90-480B-96EA-C5102209AA5A}"
+      DTS:ObjectName="xSession_Create_xmla_script">
+      <DTS:PropertyExpression
+        DTS:Name="ConnectionString">@[$Project::xSessionCreateScriptLocation]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="C:\SSASDDLs\CreateXEvent.xmla" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{88A498D3-2CB1-4651-91B5-83D2AAA52890}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;&lt;Delete IgnoreFailures=\&quot;true\&quot;  xmlns=\&quot;http://schemas.microsoft.com/analysisservices/2003/engine\&quot;&gt;&#xA;  &lt;Object&gt;&#xA;    &lt;TraceID&gt;&quot; + @[$Project::xSessionName]  +&quot;&lt;/TraceID&gt;&#xA;  &lt;/Object&gt;&#xA;&lt;/Delete&gt;&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DeleteXSessionDDL">
+      <DTS:VariableValue
+        DTS:DataType="8">&lt;Delete IgnoreFailures="true"  xmlns="http://schemas.microsoft.com/analysisservices/2003/engine"&gt;
+  &lt;Object&gt;
+    &lt;TraceID&gt;Stat&lt;/TraceID&gt;
+  &lt;/Object&gt;
+&lt;/Delete&gt;</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4EEDC529-0E3A-441B-88F6-0926FB070951}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;USE msdb ;  &#xA;GO  &#xA;&#xA;EXEC dbo.sp_update_job  &#xA;    @job_name = N'&quot; + @[$Project::xSessionFileReaderJobName] + &quot;',  &#xA;    @enabled = 0 ;  &#xA;GO  &quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="DisableJob">
+      <DTS:VariableValue
+        DTS:DataType="8">USE msdb ;  
+GO  
+
+EXEC dbo.sp_update_job  
+    @job_name = N'Parse_SSAS_xEvents',  
+    @enabled = 0 ;  
+GO  </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4990F638-6D55-428A-B02C-A0F4B3B4261F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;USE msdb ;  &#xA;GO  &#xA;&#xA;EXEC dbo.sp_update_job  &#xA;    @job_name = N'&quot; + @[$Project::xSessionFileReaderJobName] + &quot;',  &#xA;    @enabled = 1 ;  &#xA;GO  &quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="EnableJob">
+      <DTS:VariableValue
+        DTS:DataType="8">USE msdb ;  
+GO  
+
+EXEC dbo.sp_update_job  
+    @job_name = N'Parse_SSAS_xEvents',  
+    @enabled = 1 ;  
+GO  </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{DD5E0CFD-B80D-4687-91E8-2A03FE4705BF}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;UPDATE &quot; +  @[$Project::SQL_SSAS_STAT_Pramater_TableName] +&#xA;&quot; SET ParamValue = '0'  WHERE ParamName = 'xEventStat_FileOffset' &quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="UpdateSSASMonitorParamTable">
+      <DTS:VariableValue
+        DTS:DataType="8">UPDATE dbo.SSAS_MonitoringParameters SET ParamValue = '0'  WHERE ParamName = 'xEventStat_FileOffset' </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{CBE8CF23-8312-4926-A842-A3250F829639}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="@[$Project::xSessionName] + &quot;*.xel&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="xSessionFileFilter">
+      <DTS:VariableValue
+        DTS:DataType="8">Stat*.xel</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Delete xSession"
+      DTS:CreationName="Microsoft.ASExecuteDDLTask"
+      DTS:Description="Removes the xSession defined in xSessionName"
+      DTS:DTSID="{2A4B9D03-A4AA-4900-A712-02A1E9ED5CD2}"
+      DTS:ExecutableType="Microsoft.ASExecuteDDLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Delete xSession"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ASDdlData
+          ConnectionName="SSAS_CM"
+          SourceType="Variable"
+          Source="User::DeleteXSessionDDL" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Delete xSession files"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DTSID="{927289F2-6D2B-4D93-B50E-8DF50C883C57}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Delete xSession files">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.ForEachFileEnumerator"
+        DTS:DTSID="{CAF37520-C5F2-4B7A-A8E5-2F220187D7DB}"
+        DTS:ObjectName="{CAF37520-C5F2-4B7A-A8E5-2F220187D7DB}">
+        <DTS:PropertyExpression
+          DTS:Name="Directory">@[$Project::xSessionFilesFolder]</DTS:PropertyExpression>
+        <DTS:PropertyExpression
+          DTS:Name="FileSpec">@[User::xSessionFileFilter]</DTS:PropertyExpression>
+        <DTS:ObjectData>
+          <ForEachFileEnumeratorProperties>
+            <FEFEProperty
+              Folder="C:\Program Files\Microsoft SQL Server\MSAS14.SQL2017\OLAP\Log" />
+            <FEFEProperty
+              FileSpec="Stat*.xel" />
+            <FEFEProperty
+              FileNameRetrievalType="0" />
+            <FEFEProperty
+              Recurse="0" />
+          </ForEachFileEnumeratorProperties>
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:DTSID="{9210D4B5-A808-423C-88E2-7447B592D620}"
+          DTS:IncludeInDebugDump="2345"
+          DTS:Namespace="User"
+          DTS:ObjectName="currentXSessionFile">
+          <DTS:VariableValue
+            DTS:DataType="8"
+            xml:space="preserve"></DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Delete xSession files\Delete file"
+          DTS:CreationName="Microsoft.FileSystemTask"
+          DTS:DelayValidation="True"
+          DTS:Description="File System Task"
+          DTS:DTSID="{E94C4306-35CD-41D9-B30D-2826A07ACBEA}"
+          DTS:ExecutableType="Microsoft.FileSystemTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Delete file"
+          DTS:TaskContact="File System Task;Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <FileSystemData
+              TaskOperationType="DeleteFile"
+              TaskSourcePath="User::currentXSessionFile"
+              TaskIsSourceVariable="True" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{2A20BA6E-3DC0-4A74-9DAA-17FC5B0747E0}"
+          DTS:ObjectName="{2A20BA6E-3DC0-4A74-9DAA-17FC5B0747E0}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::currentXSessionFile" />
+      </DTS:ForEachVariableMappings>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Disable xEvent file reader job"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{88E67572-D103-416B-A5B7-AB2B2B4FB64E}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Disable xEvent file reader job"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{E67C3E77-AF36-454F-84A6-C6165589F006}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::DisableJob" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Enable xEvent file reader job"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{37EA283D-6A74-4723-B637-CE83B97008D1}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Enable xEvent file reader job"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{E67C3E77-AF36-454F-84A6-C6165589F006}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::EnableJob" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Recreate xSession"
+      DTS:CreationName="Microsoft.ASExecuteDDLTask"
+      DTS:Description="Analysis Services Execute DDL Task"
+      DTS:DTSID="{185582F4-DE9F-42E0-90C9-9B13F658D294}"
+      DTS:ExecutableType="Microsoft.ASExecuteDDLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Recreate xSession"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ASDdlData
+          ConnectionName="SSAS_CM"
+          SourceType="FileConnection"
+          Source="xSession_Create_xmla_script" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update SSAS Monitor parameter"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{07BBA94E-8E4A-4FA6-9559-1E5E0B6E9CDD}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update SSAS Monitor parameter"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
+          SQLTask:SqlStmtSourceType="Variable"
+          SQLTask:SqlStatementSource="User::UpdateSSASMonitorParamTable" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{5D8C7F75-8FD2-4AA9-B346-289D20D3B14B}"
+      DTS:From="Package\Delete xSession"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Delete xSession files" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{85075930-9A2D-4F23-AC11-D98F99D89D41}"
+      DTS:From="Package\Disable xEvent file reader job"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Delete xSession" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{AD0C7160-F4C0-4B1A-A730-5078FF3E3701}"
+      DTS:From="Package\Delete xSession files"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Recreate xSession" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{8EF478D5-E3CB-423C-A8A5-8387078383B7}"
+      DTS:From="Package\Recreate xSession"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Update SSAS Monitor parameter" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{9D890E2D-F5A2-4CFE-A294-AA15E25DD421}"
+      DTS:From="Package\Update SSAS Monitor parameter"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Enable xEvent file reader job" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="240.8,43.2"
+          Id="Package\Delete xSession"
+          TopLeft="57.1428581159947,99.9137269587665" />
+        <NodeLayout
+          Size="156.8,41.6"
+          Id="Package\Delete xSession files\Delete file"
+          TopLeft="29.8285757103746,32.8470620666822" />
+        <ContainerLayout
+          HeaderHeight="43.2"
+          IsExpanded="False"
+          PanelSize="228,136"
+          Size="240.8,43.2"
+          Id="Package\Delete xSession files"
+          TopLeft="57.1428581159947,178.086277052275" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="177.542858115995,143.113726958767">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.9725500935089"
+              Start="0,0"
+              End="0,27.4725500935089">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.4725500935089" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="240.8,43.2"
+          Id="Package\Disable xEvent file reader job"
+          TopLeft="57.1428581159947,21.7411768652576" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="177.542858115995,64.9411768652576">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.9725500935089"
+              Start="0,0"
+              End="0,27.4725500935089">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.4725500935089" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="240.8,43.2"
+          Id="Package\Recreate xSession"
+          TopLeft="57.1428581159947,256.258827145784" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="177.542858115995,221.286277052275">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.9725500935089"
+              Start="0,0"
+              End="0,27.4725500935089">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.4725500935089" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="240.8,43.2"
+          Id="Package\Enable xEvent file reader job"
+          TopLeft="57.1428581159947,411.003927332802" />
+        <NodeLayout
+          Size="240.8,41.6"
+          Id="Package\Update SSAS Monitor parameter"
+          TopLeft="54.6666675976345,334.431377239293" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="176.304762856815,299.458827145784">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.9725500935089"
+              Start="0,0"
+              End="0,27.4725500935089">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.4725500935089" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="176.304762856815,376.031377239293">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.9725500935089"
+              Start="0,0"
+              End="0,27.4725500935089">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.4725500935089" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <ConnectionManager
+    design-time-name="Package.ConnectionManagers[SSAS_CM]">
+    <ProjectReferenceName></ProjectReferenceName>
+  </ConnectionManager>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
