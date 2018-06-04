@@ -12,7 +12,7 @@ USING
  SELECT CAST(DATABASE_ID AS NVARCHAR(255)) AS DATABASE_ID FROM OPENQUERY
 ([SSAS], 'select * from $System.DBSCHEMA_CATALOGS')
 )SRC
-ON TRG.DatabaseName = SRC.DATABASE_ID
+ON TRG.DatabaseName = SRC.DATABASE_ID collate database_default
 AND TRG.DatabaseId > 0 --do not update unknown
 WHEN NOT MATCHED THEN
 INSERT(DatabaseName) VALUES(SRC.DATABASE_ID);
@@ -31,9 +31,9 @@ USING
 		FROM OPENQUERY([SSAS], 'select * from $System.DBSCHEMA_TABLES WHERE TABLE_TYPE = ''TABLE'' AND LEFT(TABLE_SCHEMA,1) <> ''$''')
 	) Q
 	INNER JOIN dbo.[Databases] D 
-		ON D.DatabaseName = Q.TABLE_CATALOG
+		ON D.DatabaseName = Q.TABLE_CATALOG collate database_default
 )SRC
-ON TRG.TableName = SRC.TABLE_NAME
+ON TRG.TableName = SRC.TABLE_NAME collate database_default
 AND TRG.DatabaseId = SRC.DatabaseId
 AND TRG.TableId > 0 --do not update unknown
 WHEN NOT MATCHED THEN
@@ -55,12 +55,12 @@ USING
 		FROM OPENQUERY([SSAS], 'select * from $System.DBSCHEMA_COLUMNS where COLUMN_OLAP_TYPE=''ATTRIBUTE'' AND LEFT(TABLE_SCHEMA,1) <> ''$''')
 	) Q
 	INNER JOIN dbo.[Databases] D 
-		ON D.DatabaseName = Q.TABLE_CATALOG
+		ON D.DatabaseName = Q.TABLE_CATALOG collate database_default
 	INNER JOIN dbo.[Tables] T
-		ON T.TableName = Q.TABLE_NAME
+		ON T.TableName = Q.TABLE_NAME collate database_default
 		AND T.[DatabaseId] = D.[DatabaseId]
 )SRC
-ON TRG.ColumName = SRC.COLUMN_NAME
+ON TRG.ColumName = SRC.COLUMN_NAME collate database_default
 AND TRG.TableId = SRC.TableId
 AND TRG.ColumnId > 0 --do not update unknown
 WHEN NOT MATCHED THEN
@@ -84,12 +84,12 @@ USING
 		WHERE MEASUREGROUP_NAME IS NOT NULL
 	) Q
 	INNER JOIN dbo.[Databases] D 
-		ON D.DatabaseName = Q.TABLE_CATALOG
+		ON D.DatabaseName = Q.TABLE_CATALOG collate database_default
 	INNER JOIN dbo.[Tables] T
-		ON T.TableName = Q.TABLE_NAME
+		ON T.TableName = Q.TABLE_NAME collate database_default
 		AND T.[DatabaseId] = D.[DatabaseId]
 )SRC
-ON TRG.MeasureName = SRC.MEASURE_NAME
+ON TRG.MeasureName = SRC.MEASURE_NAME collate database_default
 AND TRG.TableId = SRC.TableId
 AND TRG.MeasureId > 0 -- do not overwrite UNKNOWN
 WHEN NOT MATCHED THEN

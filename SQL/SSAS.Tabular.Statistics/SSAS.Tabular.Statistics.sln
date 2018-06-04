@@ -7,6 +7,8 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SSAS.Tabular.Statistics.Dat
 EndProject
 Project("{6870E480-7721-4708-BFB8-9AE898AA21B3}") = "SSAS.Tabular.Statistics.Model", "SSAS.Tabular.Statistics.Model\SSAS.Tabular.Statistics.Model.smproj", "{8CE414BB-95B2-4C99-9E03-51BA72086E22}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SSAS.Tabular.Scripts", "SSAS.Tabular.Scripts", "{BBC0A775-D420-458D-9B7F-4B41DA955361}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

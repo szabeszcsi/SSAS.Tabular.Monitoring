@@ -23,6 +23,7 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>True</GenerateCreateScript>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -62,6 +63,7 @@
     <Folder Include="Server Objects\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="dbo\Views\" />
+    <Folder Include="jobs" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Tables.sql" />
@@ -86,6 +88,9 @@
     <Build Include="dbo\Views\vColumnsInQuery.sql" />
     <Build Include="dbo\Views\vColumns.sql" />
     <Build Include="dbo\Stored Procedures\CleanUp_SSAS_Monitoring.sql" />
+    <None Include="jobs\Create_Job.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_Dev.scmp" />
