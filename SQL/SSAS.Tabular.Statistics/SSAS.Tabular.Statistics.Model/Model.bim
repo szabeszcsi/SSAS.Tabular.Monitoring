@@ -1,0 +1,471 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1400,
+  "model": {
+    "culture": "hu-HU",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/TSZDELL2015\\SQL2017;SSAS_Stat",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": "TSZDELL2015\\SQL2017",
+            "database": "SSAS_Stat"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "options": {},
+        "credential": {
+          "AuthenticationKind": "ServiceAccount",
+          "kind": "SQL",
+          "path": "tszdell2015\\sql2017;SSAS_Stat",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "vColumns",
+        "columns": [
+          {
+            "name": "ColumnId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "ColumnId"
+          },
+          {
+            "name": "TableId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "TableId"
+          },
+          {
+            "name": "ColumName",
+            "dataType": "string",
+            "sourceColumn": "ColumName"
+          },
+          {
+            "name": "IsActive",
+            "dataType": "boolean",
+            "sourceColumn": "IsActive"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vColumns = Source{[Schema=\"dbo\",Item=\"vColumns\"]}[Data]",
+                "in",
+                "    dbo_vColumns"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vColumnsInQuery",
+        "isHidden": true,
+        "columns": [
+          {
+            "name": "ColumnsInQueryId",
+            "dataType": "int64",
+            "sourceColumn": "ColumnsInQueryId"
+          },
+          {
+            "name": "ColumnId",
+            "dataType": "int64",
+            "sourceColumn": "ColumnId"
+          },
+          {
+            "name": "QueryId",
+            "dataType": "int64",
+            "sourceColumn": "QueryId"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vColumnsInQuery = Source{[Schema=\"dbo\",Item=\"vColumnsInQuery\"]}[Data]",
+                "in",
+                "    dbo_vColumnsInQuery"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vDatabases",
+        "columns": [
+          {
+            "name": "DatabaseId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "DatabaseId"
+          },
+          {
+            "name": "DatabaseName",
+            "dataType": "string",
+            "sourceColumn": "DatabaseName"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vDatabases = Source{[Schema=\"dbo\",Item=\"vDatabases\"]}[Data]",
+                "in",
+                "    dbo_vDatabases"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vMeasures",
+        "columns": [
+          {
+            "name": "MeasureId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "MeasureId"
+          },
+          {
+            "name": "TableId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "TableId"
+          },
+          {
+            "name": "MeasureName",
+            "dataType": "string",
+            "sourceColumn": "MeasureName"
+          },
+          {
+            "name": "IsActive",
+            "dataType": "boolean",
+            "sourceColumn": "IsActive"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vMeasures = Source{[Schema=\"dbo\",Item=\"vMeasures\"]}[Data]",
+                "in",
+                "    dbo_vMeasures"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vMeasuresInQuery",
+        "isHidden": true,
+        "columns": [
+          {
+            "name": "MeasuresInQueryId",
+            "dataType": "int64",
+            "sourceColumn": "MeasuresInQueryId"
+          },
+          {
+            "name": "MeasureId",
+            "dataType": "int64",
+            "sourceColumn": "MeasureId"
+          },
+          {
+            "name": "QueryId",
+            "dataType": "int64",
+            "sourceColumn": "QueryId"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vMeasuresInQuery = Source{[Schema=\"dbo\",Item=\"vMeasuresInQuery\"]}[Data]",
+                "in",
+                "    dbo_vMeasuresInQuery"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vQueries",
+        "columns": [
+          {
+            "name": "QueryId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "QueryId"
+          },
+          {
+            "name": "QueryText",
+            "dataType": "string",
+            "sourceColumn": "QueryText"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vQueries = Source{[Schema=\"dbo\",Item=\"vQueries\"]}[Data]",
+                "in",
+                "    dbo_vQueries"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vQueryExecutions",
+        "columns": [
+          {
+            "name": "QueryId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "QueryId"
+          },
+          {
+            "name": "UserName",
+            "dataType": "string",
+            "sourceColumn": "UserName"
+          },
+          {
+            "name": "ExecutionDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ExecutionDate"
+          },
+          {
+            "name": "ExecutionTime",
+            "dataType": "dateTime",
+            "sourceColumn": "ExecutionTime"
+          },
+          {
+            "name": "Duration",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "Duration"
+          },
+          {
+            "name": "CPUTime",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "CPUTime"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vQueryExecutions = Source{[Schema=\"dbo\",Item=\"vQueryExecutions\"]}[Data]",
+                "in",
+                "    dbo_vQueryExecutions"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Lekérdezések száma",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "COUNTROWS(vQueryExecutions),",
+              "'vQueries','vColumnsInQuery'",
+              ")"
+            ],
+            "formatString": "0"
+          },
+          {
+            "name": "Min lekérdezés ideje",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "MIN(vQueryExecutions[Duration]),",
+              "'vQueries','vColumnsInQuery'",
+              ")"
+            ]
+          },
+          {
+            "name": "Max lekérdezés ideje",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "MAX(vQueryExecutions[Duration]),",
+              "'vQueries','vColumnsInQuery'",
+              ")"
+            ]
+          },
+          {
+            "name": "Átlagos lekérdezés ideje",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "AVERAGE(vQueryExecutions[Duration]),",
+              "'vQueries','vColumnsInQuery'",
+              ")"
+            ],
+            "formatString": "0.00"
+          },
+          {
+            "name": "Lekérdezések száma (M)",
+            "expression": [
+              " ",
+              "CALCULATE(",
+              "COUNTROWS(vQueryExecutions),",
+              "'vQueries','vColumnsInQuery','vMeasuresInQuery'",
+              ")"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "vTables",
+        "columns": [
+          {
+            "name": "TableId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "TableId"
+          },
+          {
+            "name": "DatabaseId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "DatabaseId"
+          },
+          {
+            "name": "TableName",
+            "dataType": "string",
+            "sourceColumn": "TableName"
+          },
+          {
+            "name": "IsActive",
+            "dataType": "boolean",
+            "sourceColumn": "IsActive"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vTables = Source{[Schema=\"dbo\",Item=\"vTables\"]}[Data]",
+                "in",
+                "    dbo_vTables"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "1f8a015c-95cf-4f4e-826e-f6041e43dfd5",
+        "fromTable": "vColumnsInQuery",
+        "fromColumn": "ColumnId",
+        "toTable": "vColumns",
+        "toColumn": "ColumnId"
+      },
+      {
+        "name": "59c49c01-1450-4c85-8f8c-a3126d0c95bb",
+        "fromTable": "vMeasuresInQuery",
+        "fromColumn": "MeasureId",
+        "toTable": "vMeasures",
+        "toColumn": "MeasureId"
+      },
+      {
+        "name": "826f1b63-baf2-47c8-bc29-48475fc45c43",
+        "fromTable": "vColumnsInQuery",
+        "fromColumn": "QueryId",
+        "toTable": "vQueries",
+        "toColumn": "QueryId"
+      },
+      {
+        "name": "0bb509a6-4697-4716-950f-c0b399d50971",
+        "fromTable": "vMeasures",
+        "fromColumn": "TableId",
+        "toTable": "vTables",
+        "toColumn": "TableId"
+      },
+      {
+        "name": "6605c426-84ec-4d29-b2d8-379d99393405",
+        "fromTable": "vColumns",
+        "fromColumn": "TableId",
+        "toTable": "vTables",
+        "toColumn": "TableId"
+      },
+      {
+        "name": "b5fa621c-60b3-4445-8c59-47c636f62199",
+        "fromTable": "vTables",
+        "fromColumn": "DatabaseId",
+        "toTable": "vDatabases",
+        "toColumn": "DatabaseId"
+      },
+      {
+        "name": "4b943a33-d443-4bf1-9a8e-d0c4be6202cf",
+        "fromTable": "vQueryExecutions",
+        "fromColumn": "QueryId",
+        "toTable": "vQueries",
+        "toColumn": "QueryId"
+      },
+      {
+        "name": "deb941af-4baf-4920-8482-55684093a925",
+        "fromTable": "vMeasuresInQuery",
+        "fromColumn": "QueryId",
+        "toTable": "vQueries",
+        "toColumn": "QueryId"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "500"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
