@@ -22,3 +22,28 @@ INSERT [dbo].[SSAS_MonitoringParameters] ([ParamName], [ParamValue]) VALUES (N'x
 GO
 INSERT [dbo].[SSAS_MonitoringParameters] ([ParamName], [ParamValue]) VALUES (N'StatExtract_LastRun', N'2018-06-04T07:07:36.457')
 GO
+INSERT [dbo].[SSAS_MonitoringParameters] ([ParamName], [ParamValue]) VALUES (N'StatExtract_RetentionDays', N'14')
+GO
+
+GO
+SET IDENTITY_INSERT [dbo].[Databases] ON
+INSERT INTO [dbo].[Databases] ([DatabaseId],[DatabaseName]) VALUES (0,'SYSTEM/UNKNOWN')
+SET IDENTITY_INSERT [dbo].[Databases] OFF
+
+GO
+SET IDENTITY_INSERT [dbo].[Tables] ON
+INSERT INTO [dbo].[Tables] ([TableId],[DatabaseId],[TableName],[IsActive]) VALUES(0,0,'SYSTEM/UNKNOWN',1)
+SET IDENTITY_INSERT [dbo].[Tables] OFF
+
+GO
+SET IDENTITY_INSERT [dbo].[Columns] ON
+INSERT INTO [dbo].[Columns] ([ColumnId],[TableId],[ColumName],[IsActive]) VALUES (0, 0, 'SYSTEM/UNKNOWN',1)
+SET IDENTITY_INSERT [dbo].[Columns] OFF
+GO
+
+GO
+SET IDENTITY_INSERT [dbo].[Measures] ON
+INSERT INTO [dbo].[Measures] ([MeasureId], [TableId],[MeasureName],[IsActive]) VALUES (0, 0, 'SYSTEM/UNKNOWN',1)
+SET IDENTITY_INSERT [dbo].[Measures] OFF
+GO
+

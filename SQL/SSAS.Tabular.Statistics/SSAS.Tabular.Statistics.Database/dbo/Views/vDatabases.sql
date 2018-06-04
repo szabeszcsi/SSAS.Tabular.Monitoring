@@ -2,4 +2,4 @@
 AS
 SELECT [DatabaseId]
       ,[DatabaseName]
-  FROM [SSAS_Stat].[dbo].[Databases]
+  FROM [dbo].[Databases]

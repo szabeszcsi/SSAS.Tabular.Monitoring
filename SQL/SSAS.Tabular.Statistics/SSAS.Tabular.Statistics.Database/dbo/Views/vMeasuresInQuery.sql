@@ -3,4 +3,4 @@ AS
 SELECT [MeasuresInQueryId]
       ,[MeasureId]
       ,[QueryId]
-  FROM [SSAS_Stat].[dbo].[MeasuresInQuery]
+  FROM [dbo].[MeasuresInQuery]

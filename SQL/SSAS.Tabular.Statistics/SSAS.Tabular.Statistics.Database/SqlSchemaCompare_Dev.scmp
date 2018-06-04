@@ -246,7 +246,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>AllowUnsafeRowLevelSecurityDataMovement</Name>
-        <Value>False</Value>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>IncludeCompositeObjects</Name>
@@ -326,7 +326,7 @@
       </PropertyElementName>
       <PropertyElementName>
         <Name>AllowDropBlockingAssemblies</Name>
-        <Value>False</Value>
+        <Value>True</Value>
       </PropertyElementName>
       <PropertyElementName>
         <Name>DoNotDropAggregates</Name>

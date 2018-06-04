@@ -85,6 +85,7 @@
     <Build Include="dbo\Views\vDatabases.sql" />
     <Build Include="dbo\Views\vColumnsInQuery.sql" />
     <Build Include="dbo\Views\vColumns.sql" />
+    <Build Include="dbo\Stored Procedures\CleanUp_SSAS_Monitoring.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_Dev.scmp" />

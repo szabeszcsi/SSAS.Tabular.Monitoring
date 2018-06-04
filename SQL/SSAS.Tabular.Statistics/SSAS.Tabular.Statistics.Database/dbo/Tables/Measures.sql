@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[Measures] (
-    [MeasureId]   INT            IDENTITY (1, 1) NOT NULL,
+    [MeasureId]   INT            IDENTITY (0, 1) NOT NULL,
     [TableId]     INT            NOT NULL,
     [MeasureName] NVARCHAR (255) NOT NULL,
     [IsActive]    BIT            DEFAULT ((1)) NOT NULL,

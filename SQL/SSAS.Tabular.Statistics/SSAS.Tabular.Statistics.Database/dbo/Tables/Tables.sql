@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[Tables] (
-    [TableId]    INT            IDENTITY (1, 1) NOT NULL,
+    [TableId]    INT            IDENTITY (0, 1) NOT NULL,
     [DatabaseId] INT            NOT NULL,
     [TableName]  NVARCHAR (255) NOT NULL,
     [IsActive]   BIT            DEFAULT ((1)) NOT NULL,

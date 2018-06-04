@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE dbo.GetxEventsStat
+﻿CREATE PROCEDURE [dbo].GetxEventsStat
 AS BEGIN
 SET NOCOUNT ON;
 

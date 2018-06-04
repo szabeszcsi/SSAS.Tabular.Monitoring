@@ -3,4 +3,4 @@ AS
 SELECT [ColumnsInQueryId]
       ,[ColumnId]
       ,[QueryId]
-FROM [SSAS_Stat].[dbo].[ColumnsInQuery]
+FROM [dbo].[ColumnsInQuery]
