@@ -11,8 +11,8 @@
   DTS:LocaleID="1038"
   DTS:ObjectName="CleanUpAndRecreateXEvent"
   DTS:PackageType="5"
-  DTS:VersionBuild="32"
-  DTS:VersionGUID="{724658AF-C81E-450D-B3AF-E6DB492F2F14}">
+  DTS:VersionBuild="40"
+  DTS:VersionGUID="{05E3880C-514B-43A2-98BF-B8A8A2F6482C}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -66,6 +66,16 @@
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
   <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6A019D29-2465-494B-A650-77647B8B1195}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="currentXSessionFile">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
       DTS:DTSID="{88A498D3-2CB1-4651-91B5-83D2AAA52890}"
@@ -128,6 +138,17 @@ GO  </DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
+      DTS:DTSID="{88ECBCB7-A1D7-4F8C-A292-05F6A2E4BA42}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;UPDATE &quot; +  @[$Project::SQL_SSAS_STAT_Pramater_TableName] +&#xA;&quot; SET ParamValue = '&quot; + @[User::currentXSessionFile] +&quot;'  WHERE ParamName = 'xEventStat_InitialFileName' &quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="UpdateSSASMonitorParamTableInitFile">
+      <DTS:VariableValue
+        DTS:DataType="8">UPDATE dbo.SSAS_MonitoringParameters SET ParamValue = ''  WHERE ParamName = 'xEventStat_InitialFileName' </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
       DTS:DTSID="{CBE8CF23-8312-4926-A842-A3250F829639}"
       DTS:EvaluateAsExpression="True"
       DTS:Expression="@[$Project::xSessionName] + &quot;*.xel&quot;"
@@ -139,6 +160,22 @@ GO  </DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Analysis Services Processing Task"
+      DTS:CreationName="Microsoft.DTSProcessingTask"
+      DTS:Description="Analysis Services Processing Task"
+      DTS:DTSID="{548C5730-61DF-4D95-B5A0-42AA9C87EBE3}"
+      DTS:ExecutableType="Microsoft.DTSProcessingTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Analysis Services Processing Task"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ASProcessingData
+          ConnectionName=""
+          ProcessingCommands="" />
+      </DTS:ObjectData>
+    </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Delete xSession"
       DTS:CreationName="Microsoft.ASExecuteDDLTask"
@@ -254,13 +291,30 @@ GO  </DTS:VariableValue>
       DTS:LocaleID="-1"
       DTS:ObjectName="Enable xEvent file reader job"
       DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
+      DTS:ThreadHint="1">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{E67C3E77-AF36-454F-84A6-C6165589F006}"
           SQLTask:SqlStmtSourceType="Variable"
           SQLTask:SqlStatementSource="User::EnableJob" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Load stat data"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E614345E-8D22-4DFD-BA9C-562B576D0502}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load stat data"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
+          SQLTask:SqlStatementSource="exec Load_StatDb" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -282,21 +336,109 @@ GO  </DTS:VariableValue>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Update SSAS Monitor parameter"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{07BBA94E-8E4A-4FA6-9559-1E5E0B6E9CDD}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{D9177175-A982-49A4-82BE-C679F50DD0EB}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Update SSAS Monitor parameter"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
+      DTS:ObjectName="Update SSAS Monitor parameter">
       <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
-          SQLTask:SqlStmtSourceType="Variable"
-          SQLTask:SqlStatementSource="User::UpdateSSASMonitorParamTable" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Update SSAS Monitor parameter\Get new xSession file"
+          DTS:CreationName="STOCK:FOREACHLOOP"
+          DTS:Description="Foreach Loop Container"
+          DTS:DTSID="{f8e81706-3ece-42ef-b9cb-2347246f0d1d}"
+          DTS:ExecutableType="STOCK:FOREACHLOOP"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Get new xSession file">
+          <DTS:ForEachEnumerator
+            DTS:CreationName="Microsoft.ForEachFileEnumerator"
+            DTS:DTSID="{34af31c0-6328-42f8-a330-a749b7a458c2}"
+            DTS:ObjectName="{CAF37520-C5F2-4B7A-A8E5-2F220187D7DB}">
+            <DTS:PropertyExpression
+              DTS:Name="Directory">@[$Project::xSessionFilesFolder]</DTS:PropertyExpression>
+            <DTS:PropertyExpression
+              DTS:Name="FileSpec">@[User::xSessionFileFilter]</DTS:PropertyExpression>
+            <DTS:ObjectData>
+              <ForEachFileEnumeratorProperties>
+                <FEFEProperty
+                  Folder="C:\Program Files\Microsoft SQL Server\MSAS14.SQL2017\OLAP\Log" />
+                <FEFEProperty
+                  FileSpec="Stat*.xel" />
+                <FEFEProperty
+                  FileNameRetrievalType="1" />
+                <FEFEProperty
+                  Recurse="0" />
+              </ForEachFileEnumeratorProperties>
+            </DTS:ObjectData>
+          </DTS:ForEachEnumerator>
+          <DTS:Variables />
+          <DTS:Executables />
+          <DTS:ForEachVariableMappings>
+            <DTS:ForEachVariableMapping
+              DTS:CreationName=""
+              DTS:DTSID="{7CCE49DD-5B2D-44FD-86C8-0E46569755A9}"
+              DTS:ObjectName="{7CCE49DD-5B2D-44FD-86C8-0E46569755A9}"
+              DTS:ValueIndex="0"
+              DTS:VariableName="User::currentXSessionFile" />
+          </DTS:ForEachVariableMappings>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Init fileName"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{6f8aa164-05fc-4821-90e5-a15f8e4629b8}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update SSAS Monitor parameter Init fileName"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::UpdateSSASMonitorParamTableInitFile" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Offset"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{07BBA94E-8E4A-4FA6-9559-1E5E0B6E9CDD}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update SSAS Monitor parameter Offset"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::UpdateSSASMonitorParamTable" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{B3FCF9C4-3097-4001-A8E2-161C73A1EBD4}"
+          DTS:From="Package\Update SSAS Monitor parameter\Get new xSession file"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Init fileName" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{7990E57A-1E36-4449-B51B-8B67981F9047}"
+          DTS:From="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Init fileName"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Offset" />
+      </DTS:PrecedenceConstraints>
     </DTS:Executable>
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
@@ -327,7 +469,7 @@ GO  </DTS:VariableValue>
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
       DTS:CreationName=""
-      DTS:DTSID="{8EF478D5-E3CB-423C-A8A5-8387078383B7}"
+      DTS:DTSID="{EDC53B39-FB8E-4434-9B0D-402EEF28F86F}"
       DTS:From="Package\Recreate xSession"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 3"
@@ -335,11 +477,27 @@ GO  </DTS:VariableValue>
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
       DTS:CreationName=""
-      DTS:DTSID="{9D890E2D-F5A2-4CFE-A294-AA15E25DD421}"
+      DTS:DTSID="{72D04741-0674-4025-9C5F-9565C7F6A24E}"
       DTS:From="Package\Update SSAS Monitor parameter"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Load stat data" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{4A6C7D72-2469-4B47-A3E7-EFAA33BB202A}"
+      DTS:From="Package\Load stat data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
       DTS:To="Package\Enable xEvent file reader job" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{29F89673-B430-4FBE-939F-19DA8024E3A3}"
+      DTS:From="Package\Load stat data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 6"
+      DTS:To="Package\Analysis Services Processing Task" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -352,11 +510,11 @@ GO  </DTS:VariableValue>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="240.8,43.2"
+          Size="266.4,43.2"
           Id="Package\Delete xSession"
-          TopLeft="57.1428581159947,99.9137269587665" />
+          TopLeft="113.142859069669,101.912419804735" />
         <NodeLayout
           Size="156.8,41.6"
           Id="Package\Delete xSession files\Delete file"
@@ -364,24 +522,36 @@ GO  </DTS:VariableValue>
         <ContainerLayout
           HeaderHeight="43.2"
           IsExpanded="False"
-          PanelSize="228,136"
-          Size="240.8,43.2"
+          PanelSize="240.8,136"
+          Size="266.4,43.2"
           Id="Package\Delete xSession files"
-          TopLeft="57.1428581159947,178.086277052275" />
+          TopLeft="113.142859069669,182.083662744212" />
+        <NodeLayout
+          Size="266.4,43.2"
+          Id="Package\Disable xEvent file reader job"
+          TopLeft="113.142859069669,21.7411768652576" />
+        <NodeLayout
+          Size="266.4,43.2"
+          Id="Package\Enable xEvent file reader job"
+          TopLeft="113.142859069669,502.76863450212" />
+        <NodeLayout
+          Size="266.4,43.2"
+          Id="Package\Recreate xSession"
+          TopLeft="113.142859069669,262.254905683689" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="177.542858115995,143.113726958767">
+          TopLeft="246.342859069669,145.112419804735">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.9725500935089"
+              EndConnector="0,36.9712429394771"
               Start="0,0"
-              End="0,27.4725500935089">
+              End="0,29.4712429394771">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,27.4725500935089" />
+                    End="0,29.4712429394771" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -390,24 +560,20 @@ GO  </DTS:VariableValue>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="240.8,43.2"
-          Id="Package\Disable xEvent file reader job"
-          TopLeft="57.1428581159947,21.7411768652576" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="177.542858115995,64.9411768652576">
+          TopLeft="246.342859069669,64.9411768652576">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.9725500935089"
+              EndConnector="0,36.9712429394771"
               Start="0,0"
-              End="0,27.4725500935089">
+              End="0,29.4712429394771">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,27.4725500935089" />
+                    End="0,29.4712429394771" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -416,24 +582,20 @@ GO  </DTS:VariableValue>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="240.8,43.2"
-          Id="Package\Recreate xSession"
-          TopLeft="57.1428581159947,256.258827145784" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="177.542858115995,221.286277052275">
+          TopLeft="246.342859069669,225.283662744212">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.9725500935089"
+              EndConnector="0,36.9712429394771"
               Start="0,0"
-              End="0,27.4725500935089">
+              End="0,29.4712429394771">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,27.4725500935089" />
+                    End="0,29.4712429394771" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -443,27 +605,89 @@ GO  </DTS:VariableValue>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <NodeLayout
-          Size="240.8,43.2"
-          Id="Package\Enable xEvent file reader job"
-          TopLeft="57.1428581159947,411.003927332802" />
+          Size="266.4,43.2"
+          Id="Package\Load stat data"
+          TopLeft="113.142859069669,422.597391562643" />
+        <ContainerLayout
+          HeaderHeight="43.2"
+          IsExpanded="True"
+          PanelSize="213.6,49.6"
+          Size="213.6,92.8"
+          Id="Package\Update SSAS Monitor parameter\Get new xSession file"
+          TopLeft="32.5714345075647,4.32157112273353" />
         <NodeLayout
-          Size="240.8,41.6"
-          Id="Package\Update SSAS Monitor parameter"
-          TopLeft="54.6666675976345,334.431377239293" />
+          Size="213.6,41.6"
+          Id="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Offset"
+          TopLeft="32.5714345075647,195.27843799327" />
+        <NodeLayout
+          Size="216.8,41.6"
+          Id="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Init fileName"
+          TopLeft="32.5714345075647,125.400004558002" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 3]"
-          TopLeft="176.304762856815,299.458827145784">
+          Id="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint]"
+          TopLeft="140.171434507565,97.1215711227335">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.9725500935089"
+              EndConnector="0,28.2784334352685"
               Start="0,0"
-              End="0,27.4725500935089">
+              End="0,20.7784334352685">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,27.4725500935089" />
+                    End="0,20.7784334352685" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint 1]"
+          TopLeft="140.171434507565,167.000004558002">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28.2784334352684"
+              Start="0,0"
+              End="0,20.7784334352684">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.7784334352684" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43.2"
+          IsExpanded="False"
+          PanelSize="266.4,292"
+          Size="266.4,43.2"
+          Id="Package\Update SSAS Monitor parameter"
+          TopLeft="113.142859069669,342.426148623166" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="246.342859069669,305.454905683689">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.9712429394771"
+              Start="0,0"
+              End="0,29.4712429394771">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.4712429394771" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -474,18 +698,66 @@ GO  </DTS:VariableValue>
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 4]"
-          TopLeft="176.304762856815,376.031377239293">
+          TopLeft="246.342859069669,385.626148623166">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.9725500935089"
+              EndConnector="0,36.9712429394771"
               Start="0,0"
-              End="0,27.4725500935089">
+              End="0,29.4712429394771">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,27.4725500935089" />
+                    End="0,29.4712429394771" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="246.342859069669,465.797391562643">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.971242939477"
+              Start="0,0"
+              End="0,29.471242939477">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.471242939477" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="236,41.6"
+          Id="Package\Analysis Services Processing Task"
+          TopLeft="453.714293440994,422.211770111137" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 6]"
+          TopLeft="379.542859069669,443.60458083689">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="74.1714343713249,0"
+              Start="0,0"
+              End="66.6714343713249,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="66.6714343713249,0" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
