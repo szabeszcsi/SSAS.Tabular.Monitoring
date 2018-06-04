@@ -11,8 +11,8 @@
   DTS:LocaleID="1038"
   DTS:ObjectName="CleanUpAndRecreateXEvent"
   DTS:PackageType="5"
-  DTS:VersionBuild="40"
-  DTS:VersionGUID="{05E3880C-514B-43A2-98BF-B8A8A2F6482C}">
+  DTS:VersionBuild="46"
+  DTS:VersionGUID="{DD7B335B-87EE-49C9-AACA-A0A1181130DA}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -127,6 +127,28 @@ GO  </DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
+      DTS:DTSID="{97D37A93-2B88-46A2-BC4A-3B8DF5CAA407}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="&quot;&lt;Statement xmlns=\&quot;urn:schemas-microsoft-com:xml-analysis\&quot;&gt;&#xA;&#x9;{&#xA;&#x9;\&quot;refresh\&quot;: {&#xA;&#x9;\&quot;type\&quot;: \&quot;full\&quot;,&#xA;&#x9;\&quot;objects\&quot;: [&#xA;&#x9;{&#xA;&#x9;\&quot;database\&quot;: \&quot;&quot; + @[$Project::TabularStatDbName] +&quot;\&quot;&#xA;&#x9;}&#xA;&#x9;]&#xA;&#x9;}&#xA;&#x9;}&#xA;&lt;/Statement&gt;&quot;"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="processTabularStatDatabaseCommand">
+      <DTS:VariableValue
+        DTS:DataType="8">&lt;Statement xmlns="urn:schemas-microsoft-com:xml-analysis"&gt;
+	{
+	"refresh": {
+	"type": "full",
+	"objects": [
+	{
+	"database": "SSASTabularStatisticsModel"
+	}
+	]
+	}
+	}
+&lt;/Statement&gt;</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
       DTS:DTSID="{DD5E0CFD-B80D-4687-91E8-2A03FE4705BF}"
       DTS:EvaluateAsExpression="True"
       DTS:Expression="&quot;UPDATE &quot; +  @[$Project::SQL_SSAS_STAT_Pramater_TableName] +&#xA;&quot; SET ParamValue = '0'  WHERE ParamName = 'xEventStat_FileOffset' &quot;"
@@ -161,19 +183,20 @@ GO  </DTS:VariableValue>
   </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\Analysis Services Processing Task"
-      DTS:CreationName="Microsoft.DTSProcessingTask"
-      DTS:Description="Analysis Services Processing Task"
-      DTS:DTSID="{548C5730-61DF-4D95-B5A0-42AA9C87EBE3}"
-      DTS:ExecutableType="Microsoft.DTSProcessingTask"
+      DTS:refId="Package\Clean up raw stat"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{B2746760-19F7-4502-8420-C8C110596906}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Analysis Services Processing Task"
+      DTS:ObjectName="Clean up raw stat"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2017 RC1; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
-        <ASProcessingData
-          ConnectionName=""
-          ProcessingCommands="" />
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
+          SQLTask:SqlStatementSource="exec CleanUp_SSAS_Monitoring" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -315,6 +338,23 @@ GO  </DTS:VariableValue>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{E7DA000B-7A02-432A-9824-59BF5705C545}"
           SQLTask:SqlStatementSource="exec Load_StatDb" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Process Statistic Tabular Cube"
+      DTS:CreationName="Microsoft.ASExecuteDDLTask"
+      DTS:Description="Analysis Services Execute DDL Task"
+      DTS:DTSID="{FFE38824-31BB-46F9-B068-1D6F22402B8C}"
+      DTS:ExecutableType="Microsoft.ASExecuteDDLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Process Statistic Tabular Cube"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ASDdlData
+          ConnectionName="SSAS_CM"
+          SourceType="Variable"
+          Source="User::processTabularStatDatabaseCommand" />
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -493,11 +533,19 @@ GO  </DTS:VariableValue>
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
       DTS:CreationName=""
-      DTS:DTSID="{29F89673-B430-4FBE-939F-19DA8024E3A3}"
+      DTS:DTSID="{445DCB3C-E7B7-460B-B58B-2293B454D2DC}"
       DTS:From="Package\Load stat data"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 6"
-      DTS:To="Package\Analysis Services Processing Task" />
+      DTS:To="Package\Process Statistic Tabular Cube" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{43C8B88D-F005-4074-BAFC-E3AA9A60ACAB}"
+      DTS:From="Package\Process Statistic Tabular Cube"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\Clean up raw stat" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -510,7 +558,7 @@ GO  </DTS:VariableValue>
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="266.4,43.2"
           Id="Package\Delete xSession"
@@ -522,7 +570,7 @@ GO  </DTS:VariableValue>
         <ContainerLayout
           HeaderHeight="43.2"
           IsExpanded="False"
-          PanelSize="240.8,136"
+          PanelSize="266.4,136"
           Size="266.4,43.2"
           Id="Package\Delete xSession files"
           TopLeft="113.142859069669,182.083662744212" />
@@ -536,8 +584,82 @@ GO  </DTS:VariableValue>
           TopLeft="113.142859069669,502.76863450212" />
         <NodeLayout
           Size="266.4,43.2"
+          Id="Package\Load stat data"
+          TopLeft="113.142859069669,422.597391562643" />
+        <NodeLayout
+          Size="266.4,43.2"
           Id="Package\Recreate xSession"
           TopLeft="113.142859069669,262.254905683689" />
+        <ContainerLayout
+          HeaderHeight="43.2"
+          IsExpanded="True"
+          PanelSize="213.6,49.6"
+          Size="213.6,92.8"
+          Id="Package\Update SSAS Monitor parameter\Get new xSession file"
+          TopLeft="32.5714345075647,4.32157112273353" />
+        <NodeLayout
+          Size="216.8,41.6"
+          Id="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Init fileName"
+          TopLeft="32.5714345075647,125.400004558002" />
+        <NodeLayout
+          Size="213.6,41.6"
+          Id="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Offset"
+          TopLeft="32.5714345075647,195.27843799327" />
+        <EdgeLayout
+          Id="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint]"
+          TopLeft="140.171434507565,97.1215711227335">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28.2784334352685"
+              Start="0,0"
+              End="0,20.7784334352685">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.7784334352685" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint 1]"
+          TopLeft="140.171434507565,167.000004558002">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28.2784334352684"
+              Start="0,0"
+              End="0,20.7784334352684">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.7784334352684" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43.2"
+          IsExpanded="False"
+          PanelSize="266.4,292"
+          Size="266.4,43.2"
+          Id="Package\Update SSAS Monitor parameter"
+          TopLeft="113.142859069669,342.426148623166" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
           TopLeft="246.342859069669,145.112419804735">
@@ -604,76 +726,6 @@ GO  </DTS:VariableValue>
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="266.4,43.2"
-          Id="Package\Load stat data"
-          TopLeft="113.142859069669,422.597391562643" />
-        <ContainerLayout
-          HeaderHeight="43.2"
-          IsExpanded="True"
-          PanelSize="213.6,49.6"
-          Size="213.6,92.8"
-          Id="Package\Update SSAS Monitor parameter\Get new xSession file"
-          TopLeft="32.5714345075647,4.32157112273353" />
-        <NodeLayout
-          Size="213.6,41.6"
-          Id="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Offset"
-          TopLeft="32.5714345075647,195.27843799327" />
-        <NodeLayout
-          Size="216.8,41.6"
-          Id="Package\Update SSAS Monitor parameter\Update SSAS Monitor parameter Init fileName"
-          TopLeft="32.5714345075647,125.400004558002" />
-        <EdgeLayout
-          Id="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint]"
-          TopLeft="140.171434507565,97.1215711227335">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,28.2784334352685"
-              Start="0,0"
-              End="0,20.7784334352685">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,20.7784334352685" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Update SSAS Monitor parameter.PrecedenceConstraints[Constraint 1]"
-          TopLeft="140.171434507565,167.000004558002">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,28.2784334352684"
-              Start="0,0"
-              End="0,20.7784334352684">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,20.7784334352684" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43.2"
-          IsExpanded="False"
-          PanelSize="266.4,292"
-          Size="266.4,43.2"
-          Id="Package\Update SSAS Monitor parameter"
-          TopLeft="113.142859069669,342.426148623166" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 3]"
           TopLeft="246.342859069669,305.454905683689">
@@ -741,23 +793,49 @@ GO  </DTS:VariableValue>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <NodeLayout
-          Size="236,41.6"
-          Id="Package\Analysis Services Processing Task"
-          TopLeft="453.714293440994,422.211770111137" />
+          Size="220,41.6"
+          Id="Package\Clean up raw stat"
+          TopLeft="444.571436142435,505.082357668629" />
+        <NodeLayout
+          Size="220,41.6"
+          Id="Package\Process Statistic Tabular Cube"
+          TopLeft="444.571436142435,427.105887097554" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 6]"
-          TopLeft="379.542859069669,443.60458083689">
+          TopLeft="379.542859069669,446.051639330098">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="74.1714343713249,0"
+              EndConnector="65.0285770727662,0"
               Start="0,0"
-              End="66.6714343713249,0">
+              End="57.5285770727662,0">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="66.6714343713249,0" />
+                    End="57.5285770727662,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="554.571436142435,468.705887097554">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.3764705710757"
+              Start="0,0"
+              End="0,28.8764705710757">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.8764705710757" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
