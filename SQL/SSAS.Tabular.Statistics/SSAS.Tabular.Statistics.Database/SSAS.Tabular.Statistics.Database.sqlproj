@@ -64,6 +64,7 @@
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="dbo\Views\" />
     <Folder Include="jobs" />
+    <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Tables.sql" />
@@ -91,6 +92,13 @@
     <None Include="jobs\Create_Job.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Build Include="Storage\QueryTextCat.sql" />
+    <Build Include="FullTextIndexes.sql" />
+    <Build Include="dbo\Stored Procedures\Load_StatDb_FullText.sql" />
+    <Build Include="dbo\Tables\HierarchiesInQuery.sql" />
+    <Build Include="dbo\Tables\Hierarchies.sql" />
+    <Build Include="dbo\Views\vHierarchiesInQuery.sql" />
+    <Build Include="dbo\Views\vHierarchies.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SqlSchemaCompare_Dev.scmp" />

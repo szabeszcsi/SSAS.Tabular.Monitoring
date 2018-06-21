@@ -310,7 +310,7 @@
               " ",
               "CALCULATE(",
               "COUNTROWS('Query Executions'),",
-              "'Queries','vColumnsInQuery','vMeasuresInQuery'",
+              "'Queries','vColumnsInQuery','vMeasuresInQuery','vHierarchiesInQuery'",
               ")"
             ],
             "formatString": "0"
@@ -321,7 +321,7 @@
               " ",
               "CALCULATE(",
               "MIN('Query Executions'[Duration]),",
-              "'Queries','vColumnsInQuery','vMeasuresInQuery'",
+              "'Queries','vColumnsInQuery','vMeasuresInQuery','vHierarchiesInQuery'",
               ")"
             ]
           },
@@ -331,7 +331,7 @@
               " ",
               "CALCULATE(",
               "MAX('Query Executions'[Duration]),",
-              "'Queries','vColumnsInQuery','vMeasuresInQuery'",
+              "'Queries','vColumnsInQuery','vMeasuresInQuery','vHierarchiesInQuery'",
               ")"
             ]
           },
@@ -341,7 +341,7 @@
               " ",
               "CALCULATE(",
               "AVERAGE('Query Executions'[Duration]),",
-              "'Queries','vColumnsInQuery','vMeasuresInQuery'",
+              "'Queries','vColumnsInQuery','vMeasuresInQuery','vHierarchiesInQuery'",
               ")"
             ],
             "formatString": "0.00"
@@ -386,6 +386,86 @@
                 "    dbo_vTables = Source{[Schema=\"dbo\",Item=\"vTables\"]}[Data]",
                 "in",
                 "    dbo_vTables"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Hierarchies used",
+        "columns": [
+          {
+            "name": "HierarchyId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "HierarchyId"
+          },
+          {
+            "name": "TableId",
+            "dataType": "int64",
+            "isHidden": true,
+            "sourceColumn": "TableId"
+          },
+          {
+            "name": "Hierarchy name",
+            "dataType": "string",
+            "sourceColumn": "HierarchyName"
+          },
+          {
+            "name": "Is Active",
+            "dataType": "boolean",
+            "sourceColumn": "IsActive"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vHierarchies = Source{[Schema=\"dbo\",Item=\"vHierarchies\"]}[Data]",
+                "in",
+                "    dbo_vHierarchies"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "vHierarchiesInQuery",
+        "isHidden": true,
+        "columns": [
+          {
+            "name": "HierarchiesInQueryId",
+            "dataType": "int64",
+            "sourceColumn": "HierarchiesInQueryId"
+          },
+          {
+            "name": "HierarchyId",
+            "dataType": "int64",
+            "sourceColumn": "HierarchyId"
+          },
+          {
+            "name": "QueryId",
+            "dataType": "int64",
+            "sourceColumn": "QueryId"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/TSZDELL2015\\SQL2017;SSAS_Stat\",",
+                "    dbo_vHierarchiesInQuery = Source{[Schema=\"dbo\",Item=\"vHierarchiesInQuery\"]}[Data]",
+                "in",
+                "    dbo_vHierarchiesInQuery"
               ]
             }
           }
@@ -448,6 +528,20 @@
         "fromColumn": "QueryId",
         "toTable": "Queries",
         "toColumn": "QueryId"
+      },
+      {
+        "name": "b6cf2845-2d54-41af-ac22-e9d8f4ed135f",
+        "fromTable": "vHierarchiesInQuery",
+        "fromColumn": "QueryId",
+        "toTable": "Queries",
+        "toColumn": "QueryId"
+      },
+      {
+        "name": "15c2616d-6b87-4cb7-918d-50f507bc47f4",
+        "fromTable": "vHierarchiesInQuery",
+        "fromColumn": "HierarchyId",
+        "toTable": "Hierarchies used",
+        "toColumn": "HierarchyId"
       }
     ],
     "annotations": [

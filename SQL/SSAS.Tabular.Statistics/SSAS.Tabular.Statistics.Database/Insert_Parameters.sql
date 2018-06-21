@@ -47,3 +47,10 @@ INSERT INTO [dbo].[Measures] ([MeasureId], [TableId],[MeasureName],[IsActive]) V
 SET IDENTITY_INSERT [dbo].[Measures] OFF
 GO
 
+GO
+SET IDENTITY_INSERT [dbo].[Hierarchies] ON
+INSERT INTO [dbo].[Hierarchies] ([HierarchyId], [TableId],[HierarchyName],[IsActive]) VALUES (0, 0, 'SYSTEM/UNKNOWN',1)
+SET IDENTITY_INSERT [dbo].[Hierarchies] OFF
+GO
+
+
